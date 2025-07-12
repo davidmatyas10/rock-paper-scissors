@@ -1,6 +1,7 @@
 var humanScore = 0;
 var computerScore = 0;
 
+// Function to get a random choice for the computer
 function getComputerChoice(){
     const choices = ['rock', 'paper', 'scissors']
     const randomIndex = Math.floor(Math.random() * choices.length);
@@ -15,6 +16,8 @@ function getComputerChoice(){
     }
 }
 
+// getting human choice from prompt and making it case-insensitive
+// if the input is not valid, it will prompt the user again until a valid choice is made
 function getHumanChoice(){
     const choices = ['rock', 'paper', 'scissors']
     const input = prompt("Enter your choice (rock, paper, scissors):");
@@ -27,23 +30,27 @@ function getHumanChoice(){
     }
 }
 
+// Function to play a round of the game
 function playGame(){
     function playRound(humanChoice, computerChoice){
-    if (humanChoice === computerChoice){
-        return "The battle is a draw!"
-    }
-    else if (humanChoice === 'rock' && computerChoice === 'scissors' ||
-        humanChoice === 'paper' && computerChoice === 'rock' ||
-        humanChoice === 'scissors' && computerChoice === 'paper'){
-            humanScore++;
-            return 'You win! ' + humanChoice + ' beats ' + computerChoice + '.'
+    
+        // Check if the battle is a draw, win, or loss
+        if (humanChoice === computerChoice){
+            return "The battle is a draw!"
         }
-    else {
-        computerScore++;
-        return 'You lose! ' + computerChoice + ' beats ' + humanChoice + '.'
+        else if (humanChoice === 'rock' && computerChoice === 'scissors' ||
+            humanChoice === 'paper' && computerChoice === 'rock' ||
+            humanChoice === 'scissors' && computerChoice === 'paper'){
+                humanScore++;
+                return 'You win! ' + humanChoice + ' beats ' + computerChoice + '.'
+            }
+        else {
+            computerScore++;
+            return 'You lose! ' + computerChoice + ' beats ' + humanChoice + '.'
+        }
     }
-}
 
+    // Play 5 rounds of the game
     for (let i = 0; i < 5; i++){
         const humanSelection = getHumanChoice();
         const computerSelection = getComputerChoice();
@@ -53,6 +60,7 @@ function playGame(){
 
 playGame();
 
+// Display the final score and result of the game
 console.log("Final Score: You " + humanScore + " - " + computerScore + " Computer");
 if (humanScore > computerScore){
     console.log("Congratulations! You win the game!");
