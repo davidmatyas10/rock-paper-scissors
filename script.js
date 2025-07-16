@@ -17,7 +17,22 @@ function getComputerChoice(){
     }
 }
 
-// getHumanChoice function removed as it's not used in the code
+// getting human choice from prompt and making it case-insensitive
+// if the input is not valid, it will prompt the user again until a valid choice is made
+function getHumanChoice(){
+    const choices = ['rock', 'paper', 'scissors']
+    const input = document.querySelector('data-choice').value;
+    if (!input) {
+        alert("Please enter a choice.");
+        return getHumanChoice();
+    }
+    const humanChoice = choices.find(choice => choice === input);
+    if (!humanChoice) {
+        alert("Invalid choice. Please try again.");
+        return getHumanChoice();
+    }
+    return humanChoice;
+}
 
 // Function to play a round of the game
 function playRound(humanChoice, computerChoice){
@@ -41,6 +56,19 @@ function playRound(humanChoice, computerChoice){
 const div = document.createElement("div")
 div.className = "result"
 
+const resetBtn = document.createElement("button");
+resetBtn.textContent = "Reset Game";
+resetBtn.id = "resetBtn";
+resetBtn.style.display = "none";
+document.body.appendChild(resetBtn);
+
+function updateResult(result = "", finalMessage = "") {
+    div.innerHTML = `
+        <h2>Score: You ${humanScore} - ${computerScore} Computer</h2>
+        <p>${result}</p>
+        <p>${finalMessage}</p>
+    `;
+}
 
 document.querySelectorAll('button[data-choice]').forEach(button => {
     button.addEventListener('click', function() {
@@ -48,33 +76,25 @@ document.querySelectorAll('button[data-choice]').forEach(button => {
         const computerChoice = getComputerChoice();
         const result = playRound(humanChoice, computerChoice);
 
-        if (humanScore >= maxPoints || computerScore >= maxPoints) {
-            const finalResult = humanScore > computerScore ? "You win the game!" : "Computer wins the game!";
-            div.innerHTML = `
-                <h2>Final Score: You ${humanScore} - ${computerScore} Computer</h2>
-                <p>${finalResult}</p>
-                <button onclick="window.location.reload();">Play Again</button>
-            `;
-            // Disable all choice buttons
-            document.querySelectorAll('button[data-choice]').forEach(btn => btn.disabled = true);
-            return;
-        }
+        let finalMessage = "";
+        updateResult(result, finalMessage);
 
-        div.innerHTML = `
-            <h2>Score: You ${humanScore} - ${computerScore} Computer</h2>
-            <p>${result}</p>
-        `;
+        
+        if (humanScore >= maxPoints || computerScore >= maxPoints) {
+            finalMessage = humanScore >= maxPoints ? "You win the game!" : "Computer wins the game!";
+            updateResult(result, finalMessage);
+            document.querySelectorAll('button[data-choice]').forEach(btn => btn.disabled = true);
+            resetBtn.style.display = "inline-block";
+        }
     });
 });
 
-            div.innerHTML = `
-                <h2>Final Score: You ${humanScore} - ${computerScore} Computer</h2>
-                <p>${finalResult}</p>
-            `;
-            const playAgainBtn = document.createElement('button');
-            playAgainBtn.textContent = 'Play Again';
-            playAgainBtn.addEventListener('click', function() {
-                window.location.reload();
-            });
-            div.appendChild(playAgainBtn);
-            return;
+resetBtn.addEventListener('click', function() {
+    humanScore = 0;
+    computerScore = 0;
+    updateResult("", "Game has been reset.");
+    document.querySelectorAll('button[data-choice]').forEach(btn => btn.disabled = false);
+    resetBtn.style.display = "none";
+});
+
+document.body.appendChild(div);
