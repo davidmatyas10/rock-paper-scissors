@@ -17,22 +17,7 @@ function getComputerChoice(){
     }
 }
 
-// getting human choice from prompt and making it case-insensitive
-// if the input is not valid, it will prompt the user again until a valid choice is made
-function getHumanChoice(){
-    const choices = ['rock', 'paper', 'scissors']
-    const input = document.querySelector('data-choice').value;
-    if (!input) {
-        alert("Please enter a choice.");
-        return getHumanChoice();
-    }
-    const humanChoice = choices.find(choice => choice === input);
-    if (!humanChoice) {
-        alert("Invalid choice. Please try again.");
-        return getHumanChoice();
-    }
-    return humanChoice;
-}
+// getHumanChoice function removed as it's not used in the code
 
 // Function to play a round of the game
 function playRound(humanChoice, computerChoice){
@@ -70,6 +55,8 @@ document.querySelectorAll('button[data-choice]').forEach(button => {
                 <p>${finalResult}</p>
                 <button onclick="window.location.reload();">Play Again</button>
             `;
+            // Disable all choice buttons
+            document.querySelectorAll('button[data-choice]').forEach(btn => btn.disabled = true);
             return;
         }
 
@@ -80,4 +67,14 @@ document.querySelectorAll('button[data-choice]').forEach(button => {
     });
 });
 
-document.body.appendChild(div);
+            div.innerHTML = `
+                <h2>Final Score: You ${humanScore} - ${computerScore} Computer</h2>
+                <p>${finalResult}</p>
+            `;
+            const playAgainBtn = document.createElement('button');
+            playAgainBtn.textContent = 'Play Again';
+            playAgainBtn.addEventListener('click', function() {
+                window.location.reload();
+            });
+            div.appendChild(playAgainBtn);
+            return;
